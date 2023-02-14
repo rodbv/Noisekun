@@ -15,3 +15,9 @@ export const SettingsContainer = tw.div`
   md:absolute md:right-10
   flex gap-3 items-center
 `
+
+export const ToolsContainer = tw.div`
+  md:right-10
+  flex gap-3 items-center
+  flex direction row
+`

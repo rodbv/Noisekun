@@ -2,9 +2,15 @@ import React from 'react'
 import Link from 'next/link'
 
 import { GlobalVolumeController } from '../GlobalVolumeController'
+import { PomodoroController } from '../PomodoroController'
 import { BackgroundMenu } from '../BackgroundMenu'
 
-import { Container, HeaderTitle, SettingsContainer } from './styles'
+import {
+  Container,
+  HeaderTitle,
+  SettingsContainer,
+  ToolsContainer
+} from './styles'
 
 export const Header: React.FC = () => {
   return (
@@ -12,6 +18,9 @@ export const Header: React.FC = () => {
       <HeaderTitle>
         <Link href="/">Noisekun</Link>
       </HeaderTitle>
+      <ToolsContainer>
+        <PomodoroController />
+      </ToolsContainer>
       <SettingsContainer>
         <GlobalVolumeController />
         <BackgroundMenu />

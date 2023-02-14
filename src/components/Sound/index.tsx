@@ -7,6 +7,7 @@ import { useGlobalVolumeStore } from '../../stores/GlobalVolumeStore'
 import { VolumeController } from '../VolumeController'
 
 import { Container, Icon } from './styles'
+import { PomodoroStatus, usePomodoroStore } from '../../stores/PomodoroStore'
 
 export interface ISound {
   id: string
@@ -24,6 +25,7 @@ interface SoundProps {
 
 export const Sound: React.FC<SoundProps> = ({ soundData }) => {
   const globalVolume = useGlobalVolumeStore(state => state.globalVolume)
+  const pomodoroStatus = usePomodoroStore(state => state.pomodoroStatus)
 
   const [soundIsActive, setSoundIsActive] = useState(false)
   const [localSoundVolume, setLocalSoundVolume] = useState(1)
@@ -53,8 +55,10 @@ export const Sound: React.FC<SoundProps> = ({ soundData }) => {
   }, [])
 
   useEffect(() => {
-    soundRef.current.volume = localSoundVolume * globalVolume
-  }, [globalVolume, localSoundVolume])
+    const pomodoroVolume = pomodoroStatus === PomodoroStatus.Stopped ? 0 : 1
+    console.log(`pomodoroVolume: ${pomodoroVolume}`)
+    soundRef.current.volume = localSoundVolume * globalVolume * pomodoroVolume
+  }, [globalVolume, localSoundVolume, pomodoroStatus])
 
   return (
     <Container title={soundData.title}>

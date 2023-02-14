@@ -9,6 +9,14 @@
       text-white
       bg-[#0485b4];
   }
+  input[type='number']::-webkit-outer-spin-button,
+  input[type='number']::-webkit-inner-spin-button,
+  input[type='number'] {
+    -webkit-appearance: none;
+    margin: 0;
+    -moz-appearance: textfield !important;
+    margin: -15
+  }
 }
 
 @layer components {
@@ -40,3 +48,5 @@
       transition-all duration-100;
   }
 }
+
+
