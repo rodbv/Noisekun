@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 import tw from 'tailwind-styled-components'
 
 const padZero = (value: number) => value.toString().padStart(2, '0')

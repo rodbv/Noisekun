@@ -11,6 +11,7 @@ export const PomodoroController = () => {
   const [remaining, setRemaining] = useState(25 * 60)
   const [isTicking, setIsTicking] = useState(false)
   const [isLoading, setIsLoading] = useState(true)
+  const DEFAULT_POMODORO_MINUTES = 25
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -39,7 +40,7 @@ export const PomodoroController = () => {
 
   const handleToggle = () => {
     if (remaining === 0) {
-      setRemaining(25 * 60)
+      setRemaining(DEFAULT_POMODORO_MINUTES * 60)
     }
     const nextIsTicking = !isTicking
     setIsTicking(nextIsTicking)
