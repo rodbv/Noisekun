@@ -56,7 +56,6 @@ export const Sound: React.FC<SoundProps> = ({ soundData }) => {
 
   useEffect(() => {
     const pomodoroVolume = pomodoroStatus === PomodoroStatus.Stopped ? 0 : 1
-    console.log(`pomodoroVolume: ${pomodoroVolume}`)
     soundRef.current.volume = localSoundVolume * globalVolume * pomodoroVolume
   }, [globalVolume, localSoundVolume, pomodoroStatus])
 

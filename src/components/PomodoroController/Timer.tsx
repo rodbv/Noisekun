@@ -11,10 +11,23 @@ const CleanInput = tw.input`
   text-right
 `
 
-export const Timer = ({ remainingSeconds, setRemainingSeconds }) => {
+export const Timer = ({
+  remainingSeconds,
+  onTimerChanged,
+  onEnterKeyDown,
+  isLoading
+}) => {
   const handleChangeMinutes = event => {
     const { value } = event.target
-    setRemainingSeconds(value * 60)
+
+    onTimerChanged(Math.max(0, Math.min(99, value)))
+  }
+
+  const handleKeyDown = event => {
+    // ENTER or SPACE
+    if (event.keyCode === 13 || event.keyCode === 32) {
+      onEnterKeyDown()
+    }
   }
 
   const getMinutes = totalSeconds => padZero(Math.floor(totalSeconds / 60))
@@ -27,7 +40,8 @@ export const Timer = ({ remainingSeconds, setRemainingSeconds }) => {
         max={99}
         min={0}
         onChange={handleChangeMinutes}
-        value={getMinutes(remainingSeconds)}
+        value={isLoading ? '' : getMinutes(remainingSeconds)}
+        onKeyDown={handleKeyDown}
       />
       :<div>{getRemainderSeconds(remainingSeconds)}</div>
     </>

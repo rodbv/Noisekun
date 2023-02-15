@@ -4,13 +4,23 @@ import { PomodoroStatus, usePomodoroStore } from '../../stores/PomodoroStore'
 import { Container, TimerContainer } from './styles'
 import { Timer } from './Timer'
 
-const DEFAULT_TIMER = 13
 export const PomodoroController = () => {
   const setPomodoroStatus = usePomodoroStore(state => state.setPomodoroStatus)
   const pomodoroStatus = usePomodoroStore(state => state.pomodoroStatus)
 
-  const [remaining, setRemaining] = useState(DEFAULT_TIMER)
+  const [remaining, setRemaining] = useState(25 * 60)
   const [isTicking, setIsTicking] = useState(false)
+  const [isLoading, setIsLoading] = useState(true)
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const defaultTimerStored = localStorage.getItem('default-timer-minutes')
+      if (defaultTimerStored) {
+        setRemaining(+defaultTimerStored * 60)
+      }
+      setIsLoading(false)
+    }
+  }, [])
 
   useEffect(() => {
     const timeoutId = window.setTimeout(() => {
@@ -27,9 +37,9 @@ export const PomodoroController = () => {
     return () => window.clearTimeout(timeoutId)
   }, [isTicking, remaining])
 
-  const handleClick = () => {
+  const handleToggle = () => {
     if (remaining === 0) {
-      setRemaining(DEFAULT_TIMER)
+      setRemaining(25 * 60)
     }
     const nextIsTicking = !isTicking
     setIsTicking(nextIsTicking)
@@ -38,21 +48,33 @@ export const PomodoroController = () => {
     )
   }
 
+  const handleChangeTimer = minutes => {
+    if (pomodoroStatus === PomodoroStatus.Ticking) {
+      setPomodoroStatus(PomodoroStatus.Idle)
+    }
+    setIsTicking(false)
+    setRemaining(minutes * 60)
+    localStorage.setItem('default-timer-minutes', minutes)
+  }
   const PomodoroToggle = () => {
-    return pomodoroStatus === PomodoroStatus.Ticking ? <FiPause /> : <FiPlay />
+    return (
+      <button title="Toggle Pomodoro timer" onClick={handleToggle}>
+        {pomodoroStatus === PomodoroStatus.Ticking ? <FiPause /> : <FiPlay />}
+      </button>
+    )
   }
 
   return (
     <Container>
-      <button title="Toggle Pomodoro timer" onClick={handleClick}>
-        <TimerContainer>
-          <Timer
-            remainingSeconds={remaining}
-            setRemainingSeconds={setRemaining}
-          />
-          <PomodoroToggle />
-        </TimerContainer>
-      </button>
+      <TimerContainer>
+        <Timer
+          remainingSeconds={remaining}
+          onTimerChanged={handleChangeTimer}
+          onEnterKeyDown={handleToggle}
+          isLoading={isLoading}
+        />
+        <PomodoroToggle />
+      </TimerContainer>
     </Container>
   )
 }
